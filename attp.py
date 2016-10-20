@@ -1,9 +1,15 @@
 import re
 import os
+import logging
 
 from flask import Flask, request, redirect
 
 app = Flask(__name__)
+
+
+l = logging.getLogger(__name__)
+l.addHandler(logging.StreamHandler())
+l.level = logging.INFO
 
 
 def get_domain(url):
@@ -18,6 +24,8 @@ def index():
     rfrr = request.referrer or ''
     dmn = get_domain(rfrr)
     utm = '?utm_referer={}'.format(dmn) if dmn else ''
+
+    l.info("Redirecting with utm={}".format(utm))
 
     return redirect(
         'https://www.thinkful.com/atlanta-tech-talent-pipeline/{}'.format(utm),
